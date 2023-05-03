@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 // import { json } from "body-parser";
 // import mongoose from "mongoose";
 // import { getParty } from "./src/controllers/Party";
@@ -7,7 +8,7 @@ const app = express();
 // app.use(json());
 
 const PORT = process.env.PORT || 6001;
-
+app.use(cors());
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
