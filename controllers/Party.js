@@ -8,7 +8,7 @@ export const getParty = async (req, res) => {
   const id = req.params.id;
   try {
     const party = await Party.find({ _id: id });
-    res.status(201).json(party[0]);
+    res.status(200).json(party[0]);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
