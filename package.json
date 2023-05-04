@@ -1,7 +1,6 @@
 {
   "name": "b_ct",
   "type": "module",
-  "main": "index.js",
   "dependencies": {
     "api": "^5.0.8",
     "body-parser": "^1.20.2",
