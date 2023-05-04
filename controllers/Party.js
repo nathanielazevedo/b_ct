@@ -2,7 +2,7 @@ import Party from "../models/Party.js";
 // const sdk = require("api")("@yelp-developers/v1.0#deudoolf6o9f51");
 import yes from "api";
 const sdk = yes("@yelp-developers/v1.0#deudoolf6o9f51");
-
+const yelpKey = process.env.YELP;
 // Get Party
 export const getParty = async (req, res) => {
   const id = req.params.id;
@@ -39,9 +39,7 @@ export const voteParty = async (req, res) => {
 // Get Restaurants
 const getRestaurants = async (location, maxDistance) => {
   try {
-    sdk.auth(
-      "Bearer H6XKB-veFL-I0HbTszE4hHCthCM-tUGsVwaf4k8QUKODELZ6k-Y-SFVAkP9HXiIz8mVhWkaJSaLcMs36VcW1mEjRU4s3FgNPU-tOegnbg8Ov5VbwdfMTL7idej5QZHYx"
-    );
+    sdk.auth(`Bearer ${yelpKey}`);
     return sdk
       .v3_business_search({
         location: location,

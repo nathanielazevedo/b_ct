@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import {
   getParty,
@@ -9,7 +10,9 @@ import {
   validatePassword,
 } from "./controllers/Party.js";
 
+dotenv.config();
 const app = express();
+const mongoKey = process.env.MONGO;
 
 const PORT = process.env.PORT || 6001;
 app.use(cors());
@@ -23,12 +26,9 @@ app.post("/party/:id/vote", voteParty);
 app.post("/party/:id/password", validatePassword);
 
 mongoose
-  .connect(
-    "mongodb+srv://nate:Dogsdancing5!@cluster0.tlv689x.mongodb.net/?retryWrites=true&w=majority",
-    {
-      dbName: "chickentinder",
-    }
-  )
+  .connect(mongoKey, {
+    dbName: "chickentinder",
+  })
   .then(() => {
     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
