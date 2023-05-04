@@ -1,6 +1,8 @@
 import Party from "../models/Party.js";
 // const sdk = require("api")("@yelp-developers/v1.0#deudoolf6o9f51");
 import yes from "api";
+import * as dotenv from "dotenv";
+dotenv.config();
 const sdk = yes("@yelp-developers/v1.0#deudoolf6o9f51");
 const yelpKey = process.env.YELP;
 // Get Party
