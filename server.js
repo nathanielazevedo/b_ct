@@ -26,7 +26,7 @@ app.post("/party/:id/vote", voteParty);
 app.post("/party/:id/password", validatePassword);
 
 mongoose
-  .connect(mongoKey, {
+  .connect(`${mongoKey}`, {
     dbName: "chickentinder",
   })
   .then(() => {
