@@ -8,6 +8,7 @@ import {
   createParty,
   voteParty,
   validatePassword,
+  endParty,
 } from "./controllers/Party.js";
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.post("/", createParty);
 app.get("/party/:id", getParty);
 app.post("/party/:id/vote", voteParty);
 app.post("/party/:id/password", validatePassword);
+app.post("/party/:id/end", endParty);
 
 mongoose
   .connect(`${mongoKey}`, {

@@ -30,8 +30,24 @@ export const voteParty = async (req, res) => {
         party.votes[vote]++;
       }
     });
-    await Party.updateOne({ _id: id }, { votes: party.votes });
-    res.status(201).json(party);
+    const newVoters = Number(party.voters) + 1;
+    if (newVoters === party.maxVoters) {
+      const votes = party.votes;
+      const max = Math.max(...Object.values(votes));
+      const winner = Object.keys(votes).find((key) => votes[key] === max);
+      const result = party.restaurants.find((r) => r.id === winner);
+      await Party.updateOne(
+        { _id: id },
+        { winner: result, voters: newVoters, votes: party.votes }
+      );
+    } else {
+      await Party.updateOne(
+        { _id: id },
+        { votes: party.votes, voters: newVoters }
+      );
+    }
+    const updatedParty = await Party.findOne({ _id: id });
+    res.status(201).json(updatedParty);
   } catch (err) {
     console.log(err);
     res.status(404).json({ message: err.message });
@@ -53,7 +69,9 @@ const getRestaurants = async (location, maxDistance) => {
       .then(({ data }) => {
         return data.businesses;
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        return err;
+      });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -62,16 +80,24 @@ const getRestaurants = async (location, maxDistance) => {
 // Create Party
 export const createParty = async (req, res) => {
   try {
-    const { name, location, maxDistance, expirationDate, password } = req.body;
+    const { name, location, maxDistance, maxVoters, password } = req.body;
     const restaurants = await getRestaurants(location, maxDistance);
+    if (restaurants?.data?.error) {
+      res
+        .status(404)
+        .json({ message: restaurants.data.error.description })
+        .send();
+      return;
+    }
     const votes = {};
     restaurants.forEach((restaurant) => (votes[restaurant.id] = 0));
     const newParty = new Party({
       name,
       restaurants,
-      votes,
+      maxVoters,
       password,
-      expirationDate,
+      voters: 0,
+      votes,
     });
     const newerParty = await newParty.save();
     res.status(200).json(newerParty);
@@ -94,3 +120,24 @@ export const validatePassword = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+// Finish Party
+export const endParty = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const party = await Party.findOne({ _id: id });
+    const votes = party.votes;
+    const max = Math.max(...Object.values(votes));
+    const winner = Object.keys(votes).find((key) => votes[key] === max);
+    const result = party.restaurants.find((r) => r.id === winner);
+    await Party.updateOne({ _id: id }, { winner: result });
+    res.status(200).json({ winner: winner });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+/* 
+  If there is a top restaurant, it wins
+  If there is a tie, the computer randomly chooses a winner
+*/

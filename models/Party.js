@@ -7,7 +7,9 @@ const partySchema = new mongoose.Schema(
     votes: Object,
     password: String,
     expirationDate: Date,
-    finalRestaurant: Object,
+    winner: Object,
+    maxVoters: Number,
+    voters: Number,
   },
   { timestamps: true }
 );
