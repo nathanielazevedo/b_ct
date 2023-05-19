@@ -8,8 +8,12 @@ const yelpKey = process.env.YELP;
 export const getParty = async (req, res) => {
   const id = req.params.id;
   try {
-    const party = await Party.find({ _id: id });
-    res.status(200).json(party[0]);
+    const party = await Party.findOne({ _id: id });
+    if (!party) {
+      res.status(404).json({ message: 'Party not found' });
+      return;
+    }
+    res.status(200).json(party);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -93,9 +97,11 @@ const getRestaurants = async (
         limit: number_of_restaurants,
       })
       .then(({ data }) => {
+        console.log(data);
         return data.businesses;
       })
       .catch((err) => {
+        console.log(err);
         return err;
       });
   } catch (err) {
