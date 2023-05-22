@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 const partySchema = new mongoose.Schema(
   {
@@ -16,10 +16,11 @@ const partySchema = new mongoose.Schema(
     r_winner: Object || null,
     t_winner: String || null,
     voters_so_far: Number,
+    type: String,
   },
   { timestamps: true }
-);
+)
 
-const Party = mongoose.model('parties', partySchema);
+const Party = mongoose.model('parties', partySchema)
 
-export default Party;
+export default Party

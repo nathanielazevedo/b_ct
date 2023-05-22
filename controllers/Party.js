@@ -74,14 +74,15 @@ export const voteParty = async (req, res) => {
 const getRestaurants = async (
   location,
   max_distance,
-  number_of_restaurants
+  number_of_restaurants,
+  type
 ) => {
   try {
     sdk.auth(`Bearer ${yelpKey}`)
     return sdk
       .v3_business_search({
         location: location,
-        term: 'restaurants',
+        term: type,
         radius: max_distance,
         sort_by: 'best_match',
         limit: number_of_restaurants,
@@ -101,12 +102,13 @@ const getRestaurants = async (
 // Fetch Restaurants
 // return array of restaurants
 export const fetchRestaurants = async (req, res) => {
-  const { location, max_distance, number_of_restaurants } = req.body
+  const { location, max_distance, number_of_restaurants, type } = req.body
   try {
     const restaurants = await getRestaurants(
       location,
       max_distance,
-      number_of_restaurants
+      number_of_restaurants,
+      type
     )
     if (restaurants?.data?.error) {
       res
