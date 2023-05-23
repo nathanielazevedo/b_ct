@@ -1,7 +1,7 @@
 {
   "name": "b_ct",
   "type": "module",
-  "main": "server.js",
+  "main": "src/server.ts",
   "scripts": {
     "dev": "nodemon --exec 'ts-node-esm' src/server.ts ",
     "build": "tsc ",
