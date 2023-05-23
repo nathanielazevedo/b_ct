@@ -1,8 +1,8 @@
 import yelp from 'api'
 
 import * as dotenv from 'dotenv'
-import { TypedRequestBody } from '../interfaces/Request'
-import { CustomRestaurant, Restaurant } from '../interfaces/Restaurant'
+import { TypedRequestBody } from '../interfaces/Request.js'
+import { CustomRestaurant, Restaurant } from '../interfaces/Restaurant.js'
 
 dotenv.config()
 const sdk = yelp('@yelp-developers/v1.0#deudoolf6o9f51')
@@ -48,7 +48,7 @@ export const getRestaurants = async (info: {
         console.log(err)
         return err
       })
-  } catch (err) {
+  } catch (err: any) {
     throw new Error(err)
   }
 }

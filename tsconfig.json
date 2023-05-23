@@ -4,17 +4,17 @@
     "esModuleInterop": true,
     "target": "ESNext",
     "moduleResolution": "Node",
-    "outDir": "dist",
+    "outDir": "./dist",
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": false,
-    "strict": true,
-    "noImplicitAny": true,
-    "useUnknownInCatchVariables": false,
-    "noEmit": true,
-    "incremental": true,
-    "allowImportingTsExtensions": true,
-    "inlineSourceMap": true
-  },
-  "include": ["src", "server.ts"]
+    "strict": true
+    // "noImplicitAny": true,
+    // "useUnknownInCatchVariables": false,
+    // "noEmit": true,
+    // "incremental": true,
+    // "allowImportingTsExtensions": true,
+    // "inlineSourceMap": true
+  }
 }

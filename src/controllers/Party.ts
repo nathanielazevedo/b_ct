@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
-import Party from '../models/Party.ts'
-import { TypedRequest, TypedRequestParams } from '../interfaces/Request.ts'
+import Party from '../models/Party.js'
+import { TypedRequest, TypedRequestParams } from '../interfaces/Request.js'
+import { Response } from 'express'
 import {
   likesToObj,
   getWinner,
@@ -9,23 +10,26 @@ import {
   FetchRestaurantsReq,
   makeVotesObjects,
   partyNotFound,
-} from './utils.ts'
+} from './utils.js'
 
 // Fetch Restaurants -> Restaurant[]
-export const fetchRestaurants = async (req: FetchRestaurantsReq, res: any) => {
+export const fetchRestaurants = async (
+  req: FetchRestaurantsReq,
+  res: Response
+) => {
   try {
     const restaurants = await getRestaurants(req.body)
     if (restaurants?.data?.error) {
       const error = restaurants.data.error
       return res.status(404).json({ message: error }).send()
     } else res.status(200).json(restaurants)
-  } catch (err) {
+  } catch (err: any) {
     res.status(404).json({ message: err.message })
   }
 }
 
 // Create Party -> party
-export const createParty = async (req: CreatePartyReq, res: any) => {
+export const createParty = async (req: CreatePartyReq, res: Response) => {
   try {
     const party = new Party({
       ...req.body,
@@ -36,26 +40,26 @@ export const createParty = async (req: CreatePartyReq, res: any) => {
       voters_so_far: 0,
     })
     res.status(200).json(await party.save())
-  } catch (err) {
+  } catch (err: any) {
     res.status(409).json({ message: err.message })
   }
 }
 
 // Get Party -> party
 type gP = TypedRequestParams<{ id: string }>
-export const getParty = async (req: gP, res: any) => {
+export const getParty = async (req: gP, res: Response) => {
   try {
     const party = await Party.findOne({ _id: req.params.id })
     if (!party) return partyNotFound(res)
     else res.status(200).json(party)
-  } catch (err) {
+  } catch (err: any) {
     res.status(404).json({ message: err.message })
   }
 }
 
 // Vote Party -> updated party
 type vP = TypedRequest<{ id: string }, { rLikes: string[]; tLikes: string[] }>
-export const voteParty = async (req: vP, res: any) => {
+export const voteParty = async (req: vP, res: Response) => {
   const id = req.params.id
   const { rLikes, tLikes } = req.body
   try {
@@ -79,7 +83,7 @@ export const voteParty = async (req: vP, res: any) => {
       const updatedParty = await Party.findOne({ _id: id })
       res.status(201).json(updatedParty)
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(err)
     res.status(404).json({ message: err.message })
   }
@@ -87,7 +91,7 @@ export const voteParty = async (req: vP, res: any) => {
 
 // Validate Password -> success
 type vPR = TypedRequest<{ id: string }, { password: string }>
-export const validatePassword = async (req: vPR, res: any) => {
+export const validatePassword = async (req: vPR, res: Response) => {
   try {
     const party = await Party.findOne({ _id: req.params.id })
     if (!party) return partyNotFound(res)
@@ -98,14 +102,14 @@ export const validatePassword = async (req: vPR, res: any) => {
         else res.status(404).json({ message: 'incorrect password' })
       })
     }
-  } catch (err) {
+  } catch (err: any) {
     res.status(404).json({ message: err.message })
   }
 }
 
 // Finish Party -> updated party
 type ePR = TypedRequestParams<{ id: string }>
-export const endParty = async (req: ePR, res: any) => {
+export const endParty = async (req: ePR, res: Response) => {
   try {
     const party = await Party.findOne({ _id: req.params.id })
     if (!party) return partyNotFound(res)
@@ -118,7 +122,7 @@ export const endParty = async (req: ePR, res: any) => {
       const updatedParty = await Party.findOne({ _id: req.params.id })
       res.status(200).json(updatedParty)
     }
-  } catch (err) {
+  } catch (err: any) {
     res.status(404).json({ message: err.message })
   }
 }

@@ -1,4 +1,4 @@
-import { Restaurant } from './Restaurant'
+import { Restaurant } from './Restaurant.js'
 
 export type PartyType = {
   _id: string
