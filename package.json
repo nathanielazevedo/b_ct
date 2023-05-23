@@ -4,6 +4,7 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "nodemon --exec 'ts-node-esm' src/server.ts ",
+    "start": "ts-node --esm src/server.ts",
     "build": "tsc ",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --ext .ts src --fix"
