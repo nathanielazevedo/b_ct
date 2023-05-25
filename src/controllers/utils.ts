@@ -54,18 +54,21 @@ export const getRestaurants = async (info: {
 }
 
 export const partyNotFound = (res: any) => {
-  return res.status(404).json({ message: 'Party not found' }).send()
+  return res.status(403).send()
 }
 
 export const makeVotesObjects = (data: {
   restaurants: (Restaurant | CustomRestaurant)[]
-  times_to_vote_on: { id: string }[]
+  hours_to_vote_on: { id: string }[]
+  days_to_vote_on: { id: string }[]
 }) => {
   const r_votes = {} as { [key: string]: number }
-  const t_votes = {} as { [key: string]: number }
+  const h_votes = {} as { [key: string]: number }
+  const d_votes = {} as { [key: string]: number }
   data.restaurants.forEach((restaurant) => (r_votes[restaurant.id] = 0))
-  data.times_to_vote_on.forEach((time) => (t_votes[time.id] = 0))
-  return { r_votes, t_votes }
+  data.hours_to_vote_on.forEach((hour) => (h_votes[hour.id] = 0))
+  data.days_to_vote_on.forEach((day) => (d_votes[day.id] = 0))
+  return { r_votes, h_votes, d_votes }
 }
 
 export type CreatePartyReq = TypedRequestBody<{
@@ -74,10 +77,14 @@ export type CreatePartyReq = TypedRequestBody<{
   max_distance: number
   number_of_restaurants: number
   max_voters: number
-  times_to_vote_on: {
+  hours_to_vote_on: {
     id: string
   }[]
-  vote_on_time: boolean
+  days_to_vote_on: {
+    id: string
+  }[]
+  vote_on_hours: boolean
+  vote_on_days: boolean
   password: string
   restaurants: (Restaurant | CustomRestaurant)[]
   type: string
