@@ -17,7 +17,7 @@ const partySchema = new mongoose.Schema(
     h_votes: Object,
     d_votes: Object,
     r_winner: Object || null,
-    t_winner: String || null,
+    h_winner: String || null,
     d_winner: String || null,
     voters_so_far: Number,
     type: String,

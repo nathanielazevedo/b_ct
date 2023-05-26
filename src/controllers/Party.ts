@@ -54,27 +54,37 @@ export const getParty = async (req: gP, res: Response) => {
 }
 
 // Vote Party -> updated party
-type vP = TypedRequest<{ id: string }, { rLikes: string[]; hLikes: string[] }>
+type vP = TypedRequest<
+  { id: string },
+  { rLikes: string[]; hLikes: string[]; dLikes: string[] }
+>
 export const voteParty = async (req: vP, res: Response) => {
   const id = req.params.id
-  const { rLikes, hLikes } = req.body
+  const { rLikes, hLikes, dLikes } = req.body
   try {
     const party = await Party.findOne({ _id: id })
     if (!party) return partyNotFound(res)
     else {
       const r_votes = likesToObj(rLikes, party.r_votes)
       const h_votes = hLikes ? likesToObj(hLikes, party.h_votes) : null
+      const d_votes = dLikes ? likesToObj(dLikes, party.d_votes) : null
       const voters_so_far = Number(party.voters_so_far) + 1
-      const info = { voters_so_far, r_votes, h_votes }
+      const info = { voters_so_far, r_votes, h_votes, d_votes }
       if (voters_so_far === party.max_voters) {
         const vOH = party.vote_on_hours
+        const vOD = party.vote_on_days
         const hTVO = party.hours_to_vote_on
+        const dTVO = party.days_to_vote_on
         const r_winner = getWinner(party.restaurants, party.r_votes)
         const h_winner = vOH ? getWinner(hTVO, party.h_votes).id : null
-        const w = { r_winner, h_winner }
+        const d_winner = vOD ? getWinner(dTVO, party.d_votes).id : null
+        const w = { r_winner, h_winner, d_winner }
         await Party.updateOne({ _id: id }, { ...w, ...info })
       } else {
-        await Party.updateOne({ _id: id }, { voters_so_far, r_votes, h_votes })
+        await Party.updateOne(
+          { _id: id },
+          { voters_so_far, r_votes, h_votes, d_votes }
+        )
       }
       const updatedParty = await Party.findOne({ _id: id })
       res.status(201).json(updatedParty)
@@ -109,11 +119,15 @@ export const endParty = async (req: ePR, res: Response) => {
     const party = await Party.findOne({ _id: req.params.id })
     if (!party) return partyNotFound(res)
     else {
-      const r_winner = getWinner(party.restaurants, party.r_votes)
       const vOH = party.vote_on_hours
+      const vOD = party.vote_on_days
       const hTVO = party.hours_to_vote_on
-      const t_winner = vOH ? getWinner(hTVO, party.h_votes).id : null
-      await Party.updateOne({ _id: req.params.id }, { r_winner, t_winner })
+      const dTVO = party.days_to_vote_on
+      const r_winner = getWinner(party.restaurants, party.r_votes)
+      const h_winner = vOH ? getWinner(hTVO, party.h_votes).id : null
+      const d_winner = vOD ? getWinner(dTVO, party.d_votes).id : null
+      const w = { r_winner, h_winner, d_winner }
+      await Party.updateOne({ _id: req.params.id }, { ...w })
       const updatedParty = await Party.findOne({ _id: req.params.id })
       res.status(200).json(updatedParty)
     }
