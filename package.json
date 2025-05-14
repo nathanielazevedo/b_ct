@@ -1,6 +1,5 @@
 {
   "name": "b_ct",
-  "type": "commonjs",
   "main": "src/index.ts",
   "scripts": {
     "dev": "nodemon src/index.ts ",
