@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
-import Party from '../models/Party.js'
-import { TypedRequest, TypedRequestParams } from '../interfaces/Request.js'
+import Party from '../models/Party'
+import { TypedRequest, TypedRequestParams } from '../interfaces/Request'
 import { Response } from 'express'
 import {
   likesToObj,
@@ -10,7 +10,7 @@ import {
   FetchRestaurantsReq as FRR,
   makeVotesObjects,
   partyNotFound,
-} from './utils.js'
+} from './utils'
 
 // Fetch Restaurants -> Restaurant[]
 export const fetchRestaurants = async (req: FRR, res: Response) => {
@@ -36,7 +36,8 @@ export const createParty = async (req: CreatePartyReq, res: Response) => {
       voters_so_far: 0,
     })
     res.status(200).json(await party.save())
-  } catch {
+  } catch (error) {
+    console.log(error)
     res.status(404).send()
   }
 }

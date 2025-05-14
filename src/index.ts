@@ -10,7 +10,7 @@ import {
   validatePassword,
   endParty,
   fetchRestaurants,
-} from './controllers/Party.js'
+} from './controllers/Party'
 
 dotenv.config()
 const app = express()

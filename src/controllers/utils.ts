@@ -62,6 +62,7 @@ export const makeVotesObjects = (data: {
   hours_to_vote_on: { id: string }[]
   days_to_vote_on: { id: string }[]
 }) => {
+  console.log(data)
   const r_votes = {} as { [key: string]: number }
   const h_votes = {} as { [key: string]: number }
   const d_votes = {} as { [key: string]: number }
