@@ -6,7 +6,7 @@ const partySchema = new mongoose.Schema(
     location: String,
     max_distance: Number,
     number_of_restaurants: Number,
-    max_voters: Number,
+    max_voters: { type: Number, default: null }, // optional cap
     hours_to_vote_on: Array,
     days_to_vote_on: Array,
     vote_on_hours: Boolean,
@@ -21,6 +21,7 @@ const partySchema = new mongoose.Schema(
     d_winner: String || null,
     voters_so_far: Number,
     type: String,
+    price: String,
   },
   { timestamps: true }
 )
