@@ -46,8 +46,10 @@ export const getRestaurants = async (info: {
 
     // Only include price if it's not 0 (i.e. "No Limit")
     if (price && price !== '0') {
-      query.price = price
+      const maxPrice = parseInt(price, 10)
+      query.price = Array.from({ length: maxPrice }, (_, i) => i + 1).join(',')
     }
+
 
     return sdk
       .v3_business_search(query)
