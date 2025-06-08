@@ -29,18 +29,30 @@ export const getRestaurants = async (info: {
   max_distance: number
   number_of_restaurants: number
   type: string
+  price?: string // "1", "2", "3", "4", or "0" (which we'll treat as no limit)
 }) => {
-  const { location, max_distance, number_of_restaurants, type } = info
+  const { location, max_distance, number_of_restaurants, type, price } = info
+
   try {
     sdk.auth(`Bearer ${yelpKey}`)
+
+    const query: any = {
+      location,
+      term: type,
+      radius: max_distance,
+      sort_by: 'best_match',
+      limit: number_of_restaurants,
+    }
+
+    // Only include price if it's not 0 (i.e. "No Limit")
+    if (price && price !== '0') {
+      const maxPrice = parseInt(price, 10)
+      query.price = Array.from({ length: maxPrice }, (_, i) => i + 1).join(',')
+    }
+
+
     return sdk
-      .v3_business_search({
-        location: location,
-        term: type,
-        radius: max_distance,
-        sort_by: 'best_match',
-        limit: number_of_restaurants,
-      })
+      .v3_business_search(query)
       .then(({ data }: any) => {
         return data.businesses
       })
@@ -62,7 +74,6 @@ export const makeVotesObjects = (data: {
   hours_to_vote_on: { id: string }[]
   days_to_vote_on: { id: string }[]
 }) => {
-  console.log(data)
   const r_votes = {} as { [key: string]: number }
   const h_votes = {} as { [key: string]: number }
   const d_votes = {} as { [key: string]: number }
